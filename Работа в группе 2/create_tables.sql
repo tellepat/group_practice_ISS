@@ -12,7 +12,7 @@ CREATE SCHEMA hotel_schema;
 
 -- Домены для ограничения данных
 CREATE DOMAIN hotel_schema.PassportDataDomain AS VARCHAR(10)
-    CHECK (LENGTH(VALUE) = 10 AND VALUE ~ '^[0-9]+$');  -- Ограничение: только цифры, длина 10 символов
+    CHECK (VALUE ~ '^\d{10}');  -- Ограничение: только цифры, длина 10 символов
 
 CREATE DOMAIN hotel_schema.ComfortLevelDomain AS VARCHAR(8)
     CHECK (VALUE IN ('Basic', 'Standard', 'Deluxe', 'Suite'));  -- Доступные уровни комфорта
@@ -33,7 +33,7 @@ CREATE TABLE hotel_schema.Clients (
     last_name VARCHAR(30),
     first_name VARCHAR(30),
     patronimyc VARCHAR(30),
-    passport_data PassportDataDomain,
+    passport_data hotel_schema.PassportDataDomain,
     comment TEXT
 );
 
@@ -49,9 +49,9 @@ CREATE TABLE hotel_schema.Rooms (
 -- Table Room_Types
 CREATE TABLE hotel_schema.Room_Types (
     room_type_id SERIAL PRIMARY KEY,  -- Primary key
-    comfort_level ComfortLevelDomain,
-    price PriceDomain,
-    bed_count BedCountDomain
+    comfort_level hotel_schema.ComfortLevelDomain,
+    price hotel_schema.PriceDomain,
+    bed_count hotel_schema.BedCountDomain
 );
 
 -- Table Settlements
@@ -95,7 +95,7 @@ CREATE TABLE hotel_schema.Bookings (
 CREATE TABLE hotel_schema.Discounts (
     discount_id SERIAL PRIMARY KEY,  -- Primary key
     discount_type VARCHAR(50),
-    percentage DiscountPercentageDomain
+    percentage hotel_schema.DiscountPercentageDomain
 );
 
 -- Table ClientDiscounts
